@@ -1,0 +1,20 @@
+{
+  "name": "潮珠 SHIODAMA",
+  "short_name": "潮珠",
+  "description": "真珠の玉をサンゴのピンに当てて、深海の魔物と戦う物理ボール・ローグライト",
+  "lang": "ja",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#061a30",
+  "theme_color": "#061a30",
+  "categories": ["games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

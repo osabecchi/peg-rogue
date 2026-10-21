@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>潮珠 SHIODAMA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#061a30">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="潮珠">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* Layout: one portrait play column on a full-bleed sea; menus float over it as frosted panels (deep-sea, single dark look). */
+:root {
+  --sea: #061a30; --abyss: #030a16; --ink: #eaf7ff; --mute: #8fb4cf; --line: rgba(160, 225, 255, 0.18);
+  --aqua: #5fd0ff; --pearl: #f6f1e7; --coral: #ff8a7a; --gold: #ffd25e; --green: #6fe0b8; --danger: #ff6a7a;
+  --panel: rgba(5, 22, 42, 0.86); --panel2: rgba(255, 255, 255, 0.05);
+  --f-body: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --f-num: "Fredoka", "Zen Maru Gothic", sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; background: var(--sea); color: var(--ink); overflow: hidden; overscroll-behavior: none; }
+body { font-family: var(--f-body); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
+#cv { position: fixed; inset: 0; display: block; touch-action: none; }
+button { font-family: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, [data-act]:focus-visible { outline: 2px solid var(--aqua); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+
+#ui { position: fixed; inset: 0; pointer-events: none; }
+#ui.passive .scr { pointer-events: none; }
+.scr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; pointer-events: auto; overflow-y: auto;
+  padding-block: max(14px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); box-sizing: border-box; }
+.scr.ov { background: rgba(2, 8, 18, 0.55); }
+.scr.ph-battle { justify-content: flex-start; }
+
+.panel { width: 100%; max-width: 440px; max-height: 100%; overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px 16px; box-sizing: border-box; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; flex-direction: column; gap: 10px; scrollbar-width: thin; }
+.panel.wide { max-width: 560px; }
+.panel h2 { margin: 0; font-size: 21px; font-weight: 900; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.panel h2 small, .btn small, .area small { font-family: var(--f-num); font-weight: 500; font-size: 11px; letter-spacing: 0.16em; color: var(--mute); }
+.panel h3 { margin: 6px 0 0; font-size: 14px; color: var(--aqua); font-weight: 700; }
+.panel p { margin: 0; line-height: 1.6; }
+.small { font-size: 12px; color: var(--mute); }
+.center { text-align: center; }
+.hl { color: var(--gold); font-weight: 700; }
+
+.btn { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 12px 16px; background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 12px; font-size: 15px; font-weight: 700; text-align: left; transition: background .15s, border-color .15s, transform .08s; }
+.btn:hover:not([disabled]), .btn:focus-visible { background: rgba(95, 208, 255, 0.14); border-color: rgba(160, 225, 255, 0.45); }
+.btn:active:not([disabled]) { transform: scale(0.98); }
+.btn.primary { background: linear-gradient(180deg, rgba(95, 208, 255, 0.32), rgba(40, 140, 200, 0.26)); border-color: rgba(160, 225, 255, 0.55); font-size: 17px; }
+.btn.ghost { background: transparent; }
+.btn.danger { border-color: rgba(255, 106, 122, 0.5); color: #ffc4cb; }
+.btn.sm { padding: 8px 12px; font-size: 13px; justify-content: center; }
+.btn[disabled] { opacity: 0.38; cursor: not-allowed; }
+.btnrow { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 4px; }
+.btnrow.small { justify-content: space-between; margin-top: 0; }
+.btnrow .btn { flex: 1 1 auto; justify-content: center; }
+.menu { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 8px; }
+.row3 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.row3 .btn { padding: 9px 2px; }
+.choices { display: flex; flex-direction: column; gap: 8px; }
+.btn.choice { flex-direction: column; gap: 2px; align-items: flex-start; }
+.btn.choice small { letter-spacing: 0; font-family: var(--f-body); font-size: 12px; }
+.svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.svc .btn { flex-direction: column; align-items: center; font-size: 13px; padding: 10px 6px; text-align: center; }
+.svc .btn small { letter-spacing: 0; }
+
+/* タイトル */
+.scr.title { justify-content: flex-end; }
+.scr.title .btn { background: rgba(4, 18, 36, 0.82); }
+.scr.title .btn.primary { background: linear-gradient(180deg, rgba(40, 130, 190, 0.92), rgba(16, 70, 120, 0.92)); }
+.logo { position: absolute; top: 15%; left: 0; right: 0; text-align: center; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+.pearlbig { width: 64px; height: 64px; border-radius: 50%; margin-bottom: 8px; background: radial-gradient(circle at 34% 30%, #fff 0, #f6f1e7 22%, #cfd8e8 55%, #7f9fc4 100%);
+  box-shadow: 0 0 40px rgba(220, 245, 255, 0.5), inset -6px -8px 16px rgba(40, 70, 110, 0.4); animation: bob 4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+.logo h1 { margin: 0; font-size: clamp(54px, 18vw, 88px); font-weight: 900; letter-spacing: 0.08em; line-height: 1; color: var(--pearl);
+  text-shadow: 0 2px 0 #7fc8e8, 0 0 34px rgba(120, 220, 255, 0.45); }
+.logo .en { font-family: var(--f-num); font-weight: 600; letter-spacing: 0.5em; font-size: 13px; color: var(--aqua); margin-top: 8px; padding-left: 0.5em; }
+.logo p { margin: 6px 0 0; font-size: 13px; color: var(--mute); letter-spacing: 0.2em; }
+.foot { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 330px; font-size: 12px; color: var(--mute); gap: 8px; }
+.foot.top { max-width: none; }
+.pearl { font-family: var(--f-num); font-weight: 600; font-size: 15px; color: var(--pearl); display: inline-flex; align-items: center; gap: 6px; }
+.pearl::before { content: ""; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #cfd8e8 60%, #8fa8c8); }
+.pearlc { color: var(--pearl); }
+
+/* 玉と遺物のしるし */
+.ball, .relic, .dot { --s: 34px; width: var(--s); height: var(--s); flex: 0 0 var(--s); border-radius: 50%; display: inline-grid; place-items: center; position: relative;
+  font-weight: 900; font-size: calc(var(--s) * 0.5); line-height: 1; box-sizing: border-box; }
+.ball { color: #1a2238; background: radial-gradient(circle at 34% 30%, #fff 0, var(--c) 48%, color-mix(in srgb, var(--c) 55%, #000) 100%); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 45%, transparent); }
+.ball.curse { color: #fff; }
+.ball.evo { outline: 2px solid var(--gold); outline-offset: 1px; }
+.ball i { position: absolute; right: -4px; top: -4px; font-style: normal; font-family: var(--f-num); font-size: 10px; background: var(--gold); color: #3a2400; border-radius: 50%; width: 15px; height: 15px; display: grid; place-items: center; }
+.relic { color: var(--ink); background: rgba(6, 20, 40, 0.9); border: 2px solid var(--c); }
+.dot { --s: 22px; color: #1a0a00; background: var(--c, #8fb4cf); font-size: 11px; }
+.ball.unk, .relic.unk { background: rgba(255, 255, 255, 0.06); border: 1px dashed var(--line); color: var(--mute); box-shadow: none; }
+.rar { font-size: 10px; font-weight: 700; color: var(--c); border: 1px solid var(--c); border-radius: 6px; padding: 0 5px; vertical-align: 2px; }
+.stat { font-size: 12px; color: var(--mute); }
+.stat b { color: var(--ink); font-family: var(--f-num); font-weight: 600; }
+.tg { font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); color: var(--mute); white-space: nowrap; }
+.tg.new { color: var(--aqua); } .tg.up { color: var(--green); } .tg.evo { color: #3a2400; background: var(--gold); }
+.price { font-style: normal; font-family: var(--f-num); font-weight: 600; color: var(--gold); }
+.price.no { color: var(--danger); }
+
+/* 報酬・店のカード */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(124px, 1fr)); gap: 8px; }
+.card { position: relative; display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 12px 12px 10px; border-radius: 14px; background: var(--panel2);
+  border: 1px solid var(--line); min-width: 0; transition: border-color .15s, background .15s, transform .1s; }
+.card:hover, .card:focus-visible { border-color: rgba(160, 225, 255, 0.55); background: rgba(95, 208, 255, 0.1); }
+.card:active { transform: scale(0.98); }
+.card .ch { display: flex; gap: 10px; align-items: center; }
+.card .nm { font-weight: 900; font-size: 15px; }
+.card p { font-size: 12.5px; line-height: 1.55; color: #cfe6f5; }
+.card:has(.ban) p:last-of-type, .card:has(.ban) .small:last-child { padding-bottom: 18px; }
+.ban { position: absolute; bottom: 8px; right: 8px; font-size: 11px; padding: 2px 7px; border-radius: 8px; border: 1px solid rgba(255, 106, 122, 0.4); color: #ffb0b8; background: rgba(40, 0, 10, 0.4); }
+.hpline { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--mute); }
+.hpline b { font-family: var(--f-num); color: var(--ink); font-weight: 600; font-size: 14px; }
+.hpline .hp b { color: #ffb0b8; } .hpline .gold b { color: var(--gold); }
+
+/* 並んだ行 */
+.list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; min-height: 0; }
+.lrow { display: flex; gap: 10px; align-items: center; text-align: left; padding: 9px 10px; border-radius: 12px; background: var(--panel2); border: 1px solid transparent; }
+button.lrow:hover:not([disabled]), button.lrow:focus-visible { border-color: var(--line); background: rgba(95, 208, 255, 0.1); }
+.lrow[disabled] { opacity: 0.35; }
+.lrow > div { min-width: 0; }
+.lrow .grow { flex: 1; }
+.lrow .nm { font-weight: 700; font-size: 14px; }
+.lrow .nm small { color: var(--mute); font-weight: 500; }
+.lrow p { font-size: 12px; color: #bcd6ea; line-height: 1.5; }
+.lrow.unk { opacity: 0.55; }
+.lrow.got .medal { color: var(--gold); }
+.medal { font-size: 20px; color: var(--mute); width: 24px; text-align: center; }
+.thumb { width: 52px; height: 52px; flex: 0 0 52px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); display: grid; place-items: center; color: var(--mute); }
+.pips { display: flex; gap: 4px; margin-top: 4px; }
+.pips i { width: 14px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); }
+.pips i.on { background: var(--aqua); }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tabs button, .seg button { padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; font-size: 13px; font-weight: 700; color: var(--mute); }
+.tabs button.on, .seg button.on { color: var(--sea); background: var(--aqua); border-color: var(--aqua); }
+.seg { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.seg > span:first-child { min-width: 92px; color: var(--mute); }
+.seg button[disabled] { opacity: 0.35; }
+.dnum { font-family: var(--f-num); font-size: 20px; min-width: 28px; text-align: center; color: var(--coral); }
+.dlist { margin: 0; padding-left: 18px; font-size: 12px; color: #ffc9c0; columns: 2; column-gap: 18px; }
+.slider { display: grid; grid-template-columns: 92px 1fr 34px; gap: 8px; align-items: center; font-size: 13px; }
+.slider span { color: var(--mute); }
+.slider b { font-family: var(--f-num); text-align: right; font-weight: 500; }
+.slider input { width: 100%; accent-color: var(--aqua); }
+
+/* キャラ選択 */
+.chars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.charc { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 14px; background: var(--panel2); border: 2px solid transparent; min-width: 0; }
+.charc canvas { width: 100%; max-width: 72px; aspect-ratio: 1; }
+.charc .nm { font-weight: 900; font-size: 14px; display: flex; flex-direction: column; align-items: center; }
+.charc .nm small { font-size: 10px; color: var(--mute); font-weight: 500; }
+.charc .small { font-size: 10px; text-align: center; }
+.charc.sel { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.charc.locked canvas { filter: brightness(0.25); }
+.chardesc { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.deckrow { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--mute); }
+.opts { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 12px; background: rgba(0, 0, 0, 0.2); }
+
+/* 地図 */
+.scr.ph-map { justify-content: flex-start; gap: 8px; }
+.maphead, .mapwrap, .mapfoot, .hint { width: 100%; max-width: 440px; }
+.maphead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); box-sizing: border-box; }
+.area { display: flex; flex-direction: column; align-items: flex-end; }
+.area b { font-size: 17px; font-weight: 900; }
+.mapwrap { flex: 1; min-height: 0; overflow-y: auto; border-radius: 16px; background: rgba(2, 10, 22, 0.45); border: 1px solid var(--line); scrollbar-width: thin; }
+.map { position: relative; margin: 0 26px; }
+.map svg { position: absolute; inset: 0; overflow: visible; }
+.map line { stroke: rgba(160, 225, 255, 0.22); stroke-width: 2; stroke-dasharray: 4 5; }
+.map line.done { stroke: var(--aqua); stroke-dasharray: none; stroke-opacity: 0.8; }
+.node { position: absolute; transform: translate(-50%, -50%); width: 44px; height: 44px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--c) 60%, transparent);
+  background: rgba(4, 16, 34, 0.92); display: grid; place-items: center; padding: 0; opacity: 0.5; }
+.node b { font-size: 18px; font-weight: 900; color: var(--c); line-height: 1; }
+.node span { position: absolute; top: 46px; white-space: nowrap; font-size: 10.5px; color: var(--mute); }
+.node.t-boss, .node.t-final { width: 58px; height: 58px; }
+.node.t-boss span, .node.t-final span { top: 60px; color: var(--coral); font-weight: 700; }
+.node.vis { opacity: 0.9; background: color-mix(in srgb, var(--c) 25%, #04101f); }
+.node.here { box-shadow: 0 0 0 4px rgba(95, 208, 255, 0.35); opacity: 1; }
+.node.can { opacity: 1; border-color: var(--c); box-shadow: 0 0 18px color-mix(in srgb, var(--c) 55%, transparent); animation: pulse 1.4s ease-in-out infinite; }
+.node.can span { color: var(--ink); }
+.node[disabled] { cursor: default; }
+@keyframes pulse { 50% { transform: translate(-50%, -50%) scale(1.1); } }
+.mapfoot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.hint { font-size: 12.5px; padding: 8px 12px; border-radius: 12px; background: rgba(95, 208, 255, 0.12); border: 1px solid rgba(95, 208, 255, 0.3); }
+
+/* 戦闘の上に出すもの */
+.guide { pointer-events: none; margin-top: auto; margin-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); max-width: 330px; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 14px;
+  background: rgba(3, 14, 30, 0.82); border: 1px solid rgba(95, 208, 255, 0.45); text-align: center; animation: fadein .3s; }
+.guide b { font-size: 15px; color: var(--pearl); }
+.guide span { font-size: 12.5px; line-height: 1.6; color: #cfe6f5; }
+.guide small { font-size: 11px; color: var(--mute); }
+.tip { pointer-events: auto; margin-top: 52px; width: 100%; max-width: 360px; display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px;
+  background: rgba(3, 14, 30, 0.92); border: 1px solid var(--line); animation: fadein .2s; box-sizing: border-box; }
+.tip canvas { width: 56px; height: 56px; flex: 0 0 56px; }
+.tip > div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tip p { margin: 0; font-size: 12.5px; }
+@keyframes fadein { from { opacity: 0; transform: translateY(6px); } }
+
+/* 結果 */
+.resgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.resgrid div { display: flex; flex-direction: column; gap: 2px; padding: 8px; border-radius: 10px; background: var(--panel2); min-width: 0; }
+.resgrid small { font-size: 10.5px; color: var(--mute); }
+.resgrid b { font-family: var(--f-num); font-weight: 600; font-size: 16px; overflow-wrap: anywhere; }
+.breakdown { display: flex; flex-direction: column; gap: 5px; }
+.brow { display: grid; grid-template-columns: 24px minmax(0, 1.3fr) minmax(0, 1fr) 52px 34px; gap: 8px; align-items: center; font-size: 12.5px; }
+.brow .bn small { display: block; color: var(--mute); font-size: 10.5px; }
+.brow .bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.brow .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--aqua), var(--green)); }
+.brow b { font-family: var(--f-num); text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.brow span { color: var(--mute); text-align: right; font-family: var(--f-num); font-size: 11px; }
+.trigs { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; }
+.trig { display: inline-flex; gap: 4px; align-items: center; padding: 2px 8px 2px 2px; border-radius: 12px; background: var(--panel2); }
+.finaldeck { display: flex; flex-wrap: wrap; gap: 4px; }
+.evtext { font-size: 15px; line-height: 1.8 !important; padding: 6px 2px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; }
+.stats div { display: flex; justify-content: space-between; gap: 6px; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.stats span { color: var(--mute); }
+.stats b { font-family: var(--f-num); font-weight: 600; font-variant-numeric: tabular-nums; }
+.cwins { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--mute); }
+
+#toasts { position: fixed; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 52px); display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; z-index: 5; }
+.toast { display: flex; flex-direction: column; gap: 2px; padding: 9px 16px; border-radius: 14px; background: rgba(40, 30, 6, 0.92); border: 1px solid rgba(255, 210, 94, 0.6);
+  font-size: 12px; text-align: center; animation: fadein .3s; transition: opacity .5s, transform .5s; max-width: calc(100% - 32px); }
+.toast b { color: var(--gold); font-size: 14px; }
+.toast.out { opacity: 0; transform: translateY(-8px); }
+#boot { position: fixed; inset: 0; display: grid; place-items: center; color: var(--mute); font-size: 13px; pointer-events: none; }
+
+@media (max-width: 400px) {
+  .resgrid { grid-template-columns: repeat(2, 1fr); }
+  .stats { grid-template-columns: 1fr; }
+  .dlist { columns: 1; }
+  .svc { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+}
+@media (max-height: 560px) { .logo { top: 4%; } .pearlbig { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<canvas id="cv" aria-label="ゲーム画面"></canvas>
+<div id="ui"></div>
+<div id="toasts" aria-live="polite"></div>
+<div id="safe" style="position:fixed;inset:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)"></div>
+<noscript><p style="padding:20px">このゲームを遊ぶには JavaScript を有効にしてください。</p></noscript>
+<script src="js/core.js"></script>
+<script src="js/data.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/game.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
