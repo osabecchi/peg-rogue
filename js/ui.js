@@ -445,7 +445,11 @@ SD.UI = (function () {
   UI.push = push;
   UI.pop = function () { UI.overlay.pop(); UI.refresh(); };
   const ACT = {
-    back() { A('back'); UI.pop(); },
+    back() {
+      A('back');
+      if (UI.overlay.length) UI.pop();
+      else if (UI.screen !== 'title' && UI.screen !== 'game') { UI.screen = 'title'; UI.refresh(); } // キャラ選択などの画面からタイトルへ
+    },
     ov(arg) { push(arg); },
     go(arg) { UI.screen = arg; UI.refresh(); },
     tab(arg) { const [k, v] = arg.split(':'); UI.tab[k] = v; UI.refresh(); },
