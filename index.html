@@ -28,12 +28,13 @@
 }
 html, body { height: 100%; margin: 0; background: var(--sea); color: var(--ink); overflow: hidden; overscroll-behavior: none; }
 body { font-family: var(--f-body); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
-#cv { position: fixed; inset: 0; display: block; touch-action: none; }
+/* iPhone のホーム画面から開くと innerHeight が画面より短く報告されることがあるので、大きさは CSS で画面いっぱいに決めて、それを測る */
+#cv { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; display: block; touch-action: none; }
 button { font-family: inherit; color: inherit; cursor: pointer; }
 button:focus-visible, [data-act]:focus-visible { outline: 2px solid var(--aqua); outline-offset: 2px; }
 h1, h2, h3 { text-wrap: balance; }
 
-#ui { position: fixed; inset: 0; pointer-events: none; }
+#ui { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; pointer-events: none; }
 #ui.passive .scr { pointer-events: none; }
 .scr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; pointer-events: auto; overflow-y: auto;
   padding-block: max(14px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-bottom, 0px));

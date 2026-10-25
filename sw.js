@@ -1,6 +1,6 @@
 'use strict';
 /* 潮珠 SHIODAMA — サービスワーカー(ホーム画面のアプリとして入れたときに、オフラインでも起動できるようにする) */
-const CACHE = 'peg-rogue-v1';
+const CACHE = 'peg-rogue-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest',
   './js/core.js', './js/data.js', './js/physics.js', './js/game.js', './js/audio.js', './js/render.js', './js/ui.js', './js/main.js',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];

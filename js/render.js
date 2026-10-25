@@ -31,9 +31,10 @@ SD.Render = (function () {
   RD.resize = function () {
     const lowQ = !q();
     dpr = Math.min(window.devicePixelRatio || 1, lowQ ? 1 : 2);
-    CW = window.innerWidth; CH = window.innerHeight;
+    // 実際に画面に出ているキャンバスの大きさを測る(innerHeight は iPhone のホーム画面アプリで短くなることがある)
+    const box = cv.getBoundingClientRect();
+    CW = Math.round(box.width) || window.innerWidth; CH = Math.round(box.height) || window.innerHeight;
     cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr);
-    cv.style.width = CW + 'px'; cv.style.height = CH + 'px';
     // スマホの切り欠きや下のバーを避けて、遊ぶ列をその内側に収める
     const sp = document.getElementById('safe'), cs = sp ? getComputedStyle(sp) : null;
     const it = cs ? parseFloat(cs.paddingTop) || 0 : 0, ib = cs ? parseFloat(cs.paddingBottom) || 0 : 0;

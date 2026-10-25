@@ -244,6 +244,9 @@ SD.Main = (function () {
 
   /* ---------- そのほか ---------- */
   window.addEventListener('resize', () => RD.resize());
+  window.addEventListener('orientationchange', () => setTimeout(() => RD.resize(), 250));
+  window.addEventListener('pageshow', () => RD.resize());
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', () => RD.resize());
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       G.persist();
@@ -265,6 +268,8 @@ SD.Main = (function () {
     UI.screen = 'title';
     UI.refresh();
     requestAnimationFrame(loop);
+    // 起動直後は画面の大きさが確定していないことがあるので、少し待ってから測り直す
+    setTimeout(() => RD.resize(), 300); setTimeout(() => RD.resize(), 1200);
     if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !/claude|localhost|127\.0\.0\.1/.test(location.hostname)) {
       navigator.serviceWorker.register('sw.js').catch(() => { });
     }
